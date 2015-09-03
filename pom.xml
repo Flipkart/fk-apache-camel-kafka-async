@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>flipkart.dsp.camel</groupId>
-  <artifactId>fk-camel-kafka-async-component</artifactId>
+  <artifactId>fk-apache-camel-kafka-async-component</artifactId>
   <packaging>bundle</packaging>
   <version>1.0</version>
 

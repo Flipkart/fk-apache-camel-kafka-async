@@ -25,12 +25,16 @@ import org.apache.camel.spi.Metadata;
 import org.apache.camel.spi.UriEndpoint;
 import org.apache.camel.spi.UriParam;
 import org.apache.camel.spi.UriPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 
 @UriEndpoint(scheme = "kafkaasync", title = "KafkaAsync", syntax = "kafkaasync:brokers",
         label = "messaging", producerOnly = true)
 public class AsyncKafkaProducerEndpoint extends DefaultEndpoint {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AsyncKafkaProducerEndpoint.class);
 
     @UriPath
     @Metadata(required = "true")
@@ -46,6 +50,8 @@ public class AsyncKafkaProducerEndpoint extends DefaultEndpoint {
         super(endpointUri, component);
         this.brokers = remaining.split("\\?")[0];
         this.endpointUri = endpointUri;
+        LOG.info("Creating Endpoint - [" + endpointUri + "]");
+
     }
 
     public AsyncKafkaProducerConfiguration getConfiguration() {
