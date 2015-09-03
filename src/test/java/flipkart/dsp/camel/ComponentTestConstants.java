@@ -39,6 +39,9 @@ public class ComponentTestConstants {
 
     public static final String URI = "kafkaAsync:" + BROKERS;
 
+    public static final String CLIENT_ID_STR ="client.id";
+    public static final String CLIENT_ID ="useless";
+
     public static final String KAFKA_TO_URL = "kafkaAsync:" + BROKERS + "?topic=" + TOPIC + "&" + BATCH_SIZE_STR+"=" + BATCH_SIZE+
             "&" + ACKS_STR+"=" + ACKS + "&" + LINGER_MS_STR+"="+ LINGER_MS+"&"+
             "keySerializer=" + KEY_SERIALIZER + "&valueSerializer="+ VALUE_SERIALIZER +"&" +

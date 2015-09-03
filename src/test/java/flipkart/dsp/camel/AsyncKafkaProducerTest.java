@@ -1,7 +1,9 @@
 package flipkart.dsp.camel;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultMessage;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -27,12 +29,14 @@ public class AsyncKafkaProducerTest {
 
     private AsyncKafkaProducer kafkaProducer;
     private AsyncKafkaProducerEndpoint kafkaProducerEndpoint;
+    CamelContext context = new DefaultCamelContext();
 
     private Exchange exchange = mock(Exchange.class);
     private Message in = new DefaultMessage();
 
     public AsyncKafkaProducerTest() throws URISyntaxException {
-        kafkaProducerEndpoint = new AsyncKafkaProducerEndpoint(URI, BROKERS, null);
+        kafkaProducerEndpoint = new AsyncKafkaProducerEndpoint(URI, BROKERS, new AsyncKafkaComponent());
+
         kafkaProducer = new AsyncKafkaProducer(kafkaProducerEndpoint);
         kafkaProducer.producer = mock(Producer.class);
     }
@@ -41,11 +45,14 @@ public class AsyncKafkaProducerTest {
     public void testIfPropertiesBeingSetCorrectly() {
         // set something...
         this.kafkaProducerEndpoint.setValueSerializer("fooSerializer");
+        this.kafkaProducerEndpoint.setClientId(CLIENT_ID);
 
         Properties properties = kafkaProducer.getProps();
         // retrieve them back...
         assertThat(properties.getProperty(VALUE_SERIALIZER_KAFKA_STR), is("fooSerializer"));
         assertThat(properties.getProperty(BOOTSTRAP_SERVERS_STR), is(BOOTSTRAP_SERVERS));
+        assertThat(properties.getProperty(CLIENT_ID_STR),is(CLIENT_ID));
+
     }
 
     @Test
