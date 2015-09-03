@@ -48,8 +48,8 @@ public class AsyncKafkaProducerConfiguration {
     private Integer retryBackoffMs;
 
     public AsyncKafkaProducerConfiguration() {
-        setClientId((this.getTopic() != null ?
-                getTopic() : Thread.currentThread().getName()) +"-producer");
+//        setClientId((this.getTopic() != null ?
+//                getTopic() : Thread.currentThread().getName()) +"-producer");
     }
 
     private static <T> void addPropertyIfNotNull(Properties props, String key, T value) {

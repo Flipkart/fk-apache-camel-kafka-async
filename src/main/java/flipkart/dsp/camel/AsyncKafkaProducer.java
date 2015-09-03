@@ -45,6 +45,7 @@ public class AsyncKafkaProducer extends DefaultProducer {
         Properties properties =
                 this.endpoint.getConfiguration().createProducerProperties();
         properties.put("bootstrap.servers", endpoint.getBrokers());
+        properties.put("client.id", endpoint.getTopic());
         return properties;
     }
 
