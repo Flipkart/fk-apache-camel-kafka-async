@@ -21,7 +21,7 @@ public class AsyncKafkaProducerConfiguration {
     private String clientId;
 
     @UriParam(defaultValue = "all")
-    private String acks;
+    private String acks = "all";
 
     @UriParam(defaultValue = "true")
     private boolean blockOnBufferFull = true;
@@ -39,13 +39,13 @@ public class AsyncKafkaProducerConfiguration {
     private String valueSerializer;
 
     @UriParam(defaultValue = "5")
-    private Integer retries;
+    private Integer retries = 5 ;
 
     @UriParam(defaultValue = "1000")
-    private Integer reconnectBackoffMs;
+    private Integer reconnectBackoffMs = 1000;
 
     @UriParam(defaultValue = "1000")
-    private Integer retryBackoffMs;
+    private Integer retryBackoffMs = 1000;
 
     public AsyncKafkaProducerConfiguration() {
 //        setClientId((this.getTopic() != null ?
