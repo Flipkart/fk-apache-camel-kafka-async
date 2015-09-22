@@ -41,11 +41,11 @@ public class AsyncKafkaProducerConfiguration {
     @UriParam(defaultValue = "5")
     private Integer retries = 5 ;
 
-    @UriParam(defaultValue = "1000")
-    private Integer reconnectBackoffMs = 1000;
+    @UriParam(defaultValue = "100")
+    private Integer reconnectBackoffMs = 100;
 
-    @UriParam(defaultValue = "1000")
-    private Integer retryBackoffMs = 1000;
+    @UriParam(defaultValue = "100")
+    private Integer retryBackoffMs = 100;
 
     public AsyncKafkaProducerConfiguration() {
 //        setClientId((this.getTopic() != null ?

@@ -7,9 +7,12 @@ import kafka.javaapi.consumer.ConsumerConnector;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.test.junit4.CamelTestSupport;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static flipkart.dsp.camel.ComponentTestConstants.TOPIC;
+import static org.hamcrest.core.Is.is;
 
 /**
  * Created by bhushan.sk on 01/09/15.
@@ -39,6 +43,7 @@ public class KafkaProducerIntegrationTest extends CamelTestSupport {
 
     private static final String MESSAGE_BODY = "This is ABRACADABRA";
     private static final String PARTITION_KEY = "FooPartitionKey";
+    private static final String TEST_ROUTE = "test_route" ;
 
     private static ConsumerConnector stringsConsumerConn;
 
@@ -48,14 +53,53 @@ public class KafkaProducerIntegrationTest extends CamelTestSupport {
     private CamelContext camelContext = new DefaultCamelContext();
 
     @Override
+    public CamelContext createCamelContext() {
+        return camelContext;
+    }
+
+    @Override
     public RouteBuilder createRouteBuilder() {
 
         return new RouteBuilder() {
             @Override
             public void configure() throws Exception {
-                from("direct://startEp").to(ComponentTestConstants.KAFKA_TO_URL);
+                from("direct://startEp").to(ComponentTestConstants.KAFKA_TO_URL).routeId(TEST_ROUTE);
             }
         };
+    }
+
+    @Test
+    public void shouldValidateMaxAsyncWaitParameterViaExchange() throws Exception {
+        final RouteDefinition route = camelContext.getRouteDefinition(TEST_ROUTE);
+        MutableBoolean routeIntercepted = new MutableBoolean(false);
+        final Integer[] maxAwait = new Integer[1];
+        route.adviceWith(camelContext, new RouteBuilder() {
+            @Override
+            public void configure() throws Exception {
+                interceptSendToEndpoint(ComponentTestConstants.KAFKA_TO_URL)
+                        .skipSendToOriginalEndpoint()
+                        .process(exchange -> {
+                            routeIntercepted.setTrue();
+                            maxAwait[0] = exchange.getIn().getHeader(KafkaConstants.MAX_ASYNC_WAIT, Integer.class);
+                        });
+            }
+        });
+        try {
+
+            Map<String, Object> inTopicHeaders = new HashMap<String, Object>();
+            inTopicHeaders.put(KafkaConstants.PARTITION_KEY, PARTITION_KEY.getBytes());
+            inTopicHeaders.put(KafkaConstants.MAX_ASYNC_WAIT,ComponentTestConstants.MAXAWAITASYNC);
+
+            Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
+            topicCountMap.put(TOPIC, 5);
+
+            this.startEndpoint.sendBodyAndHeaders(MESSAGE_BODY, inTopicHeaders);
+
+        } catch (RuntimeCamelException e) {
+            // Expected
+        }
+        assertTrue(routeIntercepted.booleanValue());
+        assertThat(maxAwait[0],is(ComponentTestConstants.MAXAWAITASYNC));
     }
 
     @Before
@@ -87,6 +131,7 @@ public class KafkaProducerIntegrationTest extends CamelTestSupport {
 
         Map<String, Object> inTopicHeaders = new HashMap<String, Object>();
         inTopicHeaders.put(KafkaConstants.PARTITION_KEY, PARTITION_KEY.getBytes());
+        inTopicHeaders.put(KafkaConstants.MAX_ASYNC_WAIT, 5000);
 
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
         topicCountMap.put(TOPIC, 5);

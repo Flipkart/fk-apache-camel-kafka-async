@@ -7,4 +7,5 @@ public class KafkaConstants {
     public final static String PARTITION_KEY =  "part_key";
     public final static String TOPIC = "topic";
     public static final String KEY = "key";
+    public static final String MAX_ASYNC_WAIT = "maxAsyncWait";
 }

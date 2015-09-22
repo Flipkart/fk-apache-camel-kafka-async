@@ -37,6 +37,8 @@ public class ComponentTestConstants {
 
     public static final String PARTITION_KEY_VALUE = "fooPartitionKey";
 
+    public static final Integer MAXAWAITASYNC = 4000;
+
     public static final String URI = "kafkaAsync:" + BROKERS;
 
     public static final String CLIENT_ID_STR ="client.id";
