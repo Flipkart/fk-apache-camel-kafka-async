@@ -25,7 +25,7 @@ public class AsyncKafkaProducer extends DefaultProducer {
 
     // This value governs, when the caling thread 'times out', over the Kafka Future
     // irrespective of the (retryInterval * retries) value.
-    final static Integer maxAsyncAwaitInMs = 2000;
+    final static Integer maxAsyncAwaitInMs = 10000;
 
     public AsyncKafkaProducer(AsyncKafkaProducerEndpoint endpoint) {
         super(endpoint);

@@ -6,7 +6,7 @@
   <groupId>flipkart.dsp.camel</groupId>
   <artifactId>fk-apache-camel-kafka-async-component</artifactId>
   <packaging>bundle</packaging>
-  <version>1.3</version>
+  <version>1.4</version>
 
   <name>Apache Camel Async Kafka Producer Component</name>
   <url>http://www.flipkart.com</url>
